@@ -584,6 +584,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * @param o element to be removed from this list, if present
      * @return <tt>true</tt> if this list contained the specified element
      */
+    // 集合中有指定的元素就删除，否则不变，连null都能删除
     public boolean remove(Object o) {
         if (o == null) {
             for (int index = 0; index < size; index++)
@@ -611,6 +612,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
         if (numMoved > 0)
             System.arraycopy(elementData, index+1, elementData, index,
                              numMoved);
+        // 防止内存泄漏（否则实际上数组中依然有该引用，gc无法进行垃圾回收，类似Java中堆栈数据结构的实现方式）
         elementData[--size] = null; // clear to let GC do its work
     }
 
@@ -618,6 +620,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * Removes all of the elements from this list.  The list will
      * be empty after this call returns.
      */
+    // 清空集合
     public void clear() {
         modCount++;
 
@@ -641,6 +644,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * @return <tt>true</tt> if this list changed as a result of the call
      * @throws NullPointerException if the specified collection is null
      */
+    // 将指定集合添加到原集合中
     public boolean addAll(Collection<? extends E> c) {
         Object[] a = c.toArray();
         int numNew = a.length;
@@ -665,6 +669,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @throws NullPointerException if the specified collection is null
      */
+    // 在指定索引出添加指定集合
     public boolean addAll(int index, Collection<? extends E> c) {
         rangeCheckForAdd(index);
 
@@ -696,6 +701,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      *          toIndex > size() ||
      *          toIndex < fromIndex})
      */
+    // 删除指定索引范围的元素
     protected void removeRange(int fromIndex, int toIndex) {
         modCount++;
         int numMoved = size - toIndex;
@@ -716,6 +722,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * negative: It is always used immediately prior to an array access,
      * which throws an ArrayIndexOutOfBoundsException if index is negative.
      */
+    // 对数组范围的检查
     private void rangeCheck(int index) {
         if (index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -724,6 +731,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
     /**
      * A version of rangeCheck used by add and addAll.
      */
+    // 对数组范围的检查
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -734,6 +742,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * Of the many possible refactorings of the error handling code,
      * this "outlining" performs best with both server and client VMs.
      */
+    // 构造出错提示信息
     private String outOfBoundsMsg(int index) {
         return "Index: "+index+", Size: "+size;
     }
@@ -753,6 +762,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      *         or if the specified collection is null
      * @see Collection#contains(Object)
      */
+    // 在原集合中，删除指定的集合
     public boolean removeAll(Collection<?> c) {
         Objects.requireNonNull(c);
         return batchRemove(c, false);
@@ -774,11 +784,13 @@ OutOfMemoryError：要求数组大小超过VM的限制
      *         or if the specified collection is null
      * @see Collection#contains(Object)
      */
+    // 在原集合中留下指定集合中元素
     public boolean retainAll(Collection<?> c) {
         Objects.requireNonNull(c);
         return batchRemove(c, true);
     }
 
+    // 这个方法得细琢磨琢磨，写写测试方法，看看人家为什么这么写
     private boolean batchRemove(Collection<?> c, boolean complement) {
         final Object[] elementData = this.elementData;
         int r = 0, w = 0;
@@ -816,6 +828,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      *             instance is emitted (int), followed by all of its elements
      *             (each an <tt>Object</tt>) in the proper order.
      */
+    // 将集合写入序列化流中
     private void writeObject(java.io.ObjectOutputStream s)
         throws java.io.IOException{
         // Write out element count, and any hidden stuff
@@ -839,6 +852,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * Reconstitute the <tt>ArrayList</tt> instance from a stream (that is,
      * deserialize it).
      */
+    // 从序列化流中读出集合
     private void readObject(java.io.ObjectInputStream s)
         throws java.io.IOException, ClassNotFoundException {
         elementData = EMPTY_ELEMENTDATA;
@@ -860,7 +874,8 @@ OutOfMemoryError：要求数组大小超过VM的限制
             }
         }
     }
-
+    
+    //=============================ArrayList中的迭代器================================
     /**
      * Returns a list iterator over the elements in this list (in proper
      * sequence), starting at the specified position in the list.
@@ -902,9 +917,11 @@ OutOfMemoryError：要求数组大小超过VM的限制
         return new Itr();
     }
 
+    //=====================================Itr 内部类开始===========================================
     /**
      * An optimized version of AbstractList.Itr
      */
+    // 内部类迭代器
     private class Itr implements Iterator<E> {
         int cursor;       // index of next element to return
         int lastRet = -1; // index of last element returned; -1 if no such
@@ -970,6 +987,10 @@ OutOfMemoryError：要求数组大小超过VM的限制
         }
     }
 
+    //=====================================Itr 内部类结束===========================================
+    
+    
+    //=====================================ListItr 内部类开始===========================================
     /**
      * An optimized version of AbstractList.ListItr
      */
@@ -1031,6 +1052,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
         }
     }
 
+    //=====================================ListItr 内部类结束===========================================
     /**
      * Returns a view of the portion of this list between the specified
      * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.  (If
@@ -1060,6 +1082,7 @@ OutOfMemoryError：要求数组大小超过VM的限制
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
      */
+    // 按指定索引截取集合，获取子集合
     public List<E> subList(int fromIndex, int toIndex) {
         subListRangeCheck(fromIndex, toIndex, size);
         return new SubList(this, 0, fromIndex, toIndex);
@@ -1075,6 +1098,10 @@ OutOfMemoryError：要求数组大小超过VM的限制
                                                ") > toIndex(" + toIndex + ")");
     }
 
+    
+    
+    //=================================SubList 内部类开始===================================
+    
     private class SubList extends AbstractList<E> implements RandomAccess {
         private final AbstractList<E> parent;
         private final int parentOffset;
@@ -1305,6 +1332,8 @@ OutOfMemoryError：要求数组大小超过VM的限制
                                                offset + this.size, this.modCount);
         }
     }
+    
+  //=================================SubList 内部类结束===================================
 
     @Override
     public void forEach(Consumer<? super E> action) {
@@ -1338,6 +1367,8 @@ OutOfMemoryError：要求数组大小超过VM的限制
     public Spliterator<E> spliterator() {
         return new ArrayListSpliterator<>(this, 0, -1, 0);
     }
+    
+    //=============================ArrayListSpliterator 内部类开始==================================
 
     /** Index-based split-by-two, lazily initialized Spliterator */
     static final class ArrayListSpliterator<E> implements Spliterator<E> {
@@ -1456,6 +1487,8 @@ OutOfMemoryError：要求数组大小超过VM的限制
             return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
     }
+    
+  //=============================ArrayListSpliterator 内部类结束==================================
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
