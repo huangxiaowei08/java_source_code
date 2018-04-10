@@ -70,6 +70,8 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
      */
+	// 唯一的构造函数，
+	// 抽象类也可以有构造函数，那么抽象类到底能不能被实例化呢？？？
     protected AbstractMap() {
     }
 
@@ -205,6 +207,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      */
+    // AbstractMap并没有真正实现Map接口中的put方法
     public V put(K key, V value) {
         throw new UnsupportedOperationException();
     }
@@ -324,6 +327,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * }
      *}</pre>
      */
+    // 经过transient关键字修饰的字段是不能够被序列化的
     transient Set<K>        keySet;
     transient Collection<V> values;
 
@@ -445,6 +449,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
         return vals;
     }
 
+    // 唯一的抽象方法
     public abstract Set<Entry<K,V>> entrySet();
 
 
@@ -593,6 +598,19 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
     // and the amount of duplicated code is too small to warrant
     // exposing a common abstract class.
 
+    /*
+     * 实施注：simpleentry和simpleimmutableentry
+
+是截然不同的无关类，即使它们共享
+
+一些代码。既然你不能加或减最后的岬
+
+在子类中的字段中，它们不能共享表示，
+
+重复代码的数量太小，无法保证。
+
+公开公共抽象类。
+     */
 
     /**
      * An Entry maintaining a key and a value.  The value may be
@@ -604,6 +622,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      *
      * @since 1.6
      */
+    // 内部类
     public static class SimpleEntry<K,V>
         implements Entry<K,V>, java.io.Serializable
     {
@@ -734,6 +753,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      *
      * @since 1.6
      */
+    // 不可变的SimpleEntry
     public static class SimpleImmutableEntry<K,V>
         implements Entry<K,V>, java.io.Serializable
     {
@@ -793,6 +813,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return (Does not return)
          * @throws UnsupportedOperationException always
          */
+        // 直接抛出异常
         public V setValue(V value) {
             throw new UnsupportedOperationException();
         }

@@ -136,6 +136,7 @@ public interface Map<K,V> {
      *
      * @return the number of key-value mappings in this map
      */
+	// 获取map中的映射数量
     int size();
 
     /**
@@ -143,6 +144,7 @@ public interface Map<K,V> {
      *
      * @return <tt>true</tt> if this map contains no key-value mappings
      */
+    // 判断map是否为空
     boolean isEmpty();
 
     /**
@@ -162,6 +164,7 @@ public interface Map<K,V> {
      *         does not permit null keys
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      */
+    // 判断是否包含指定的key
     boolean containsKey(Object key);
 
     /**
@@ -182,6 +185,7 @@ public interface Map<K,V> {
      *         map does not permit null values
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      */
+    // 判断是否包含指定的value
     boolean containsValue(Object value);
 
     /**
@@ -302,6 +306,7 @@ public interface Map<K,V> {
      * @throws UnsupportedOperationException if the <tt>clear</tt> operation
      *         is not supported by this map
      */
+    // 清空map
     void clear();
 
 
@@ -372,6 +377,7 @@ public interface Map<K,V> {
      * @see Map#entrySet()
      * @since 1.2
      */
+    // 内部接口的设计，怎么用？
     interface Entry<K,V> {
         /**
          * Returns the key corresponding to this entry.
@@ -467,6 +473,7 @@ public interface Map<K,V> {
          * @see Comparable
          * @since 1.8
          */
+        // 1.8 新特性，没用过，怎么用？？？
         public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K,V>> comparingByKey() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getKey().compareTo(c2.getKey());
@@ -484,6 +491,7 @@ public interface Map<K,V> {
          * @see Comparable
          * @since 1.8
          */
+        // 1.8 新特性，没用过，怎么用？？？
         public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K,V>> comparingByValue() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getValue().compareTo(c2.getValue());
@@ -502,6 +510,7 @@ public interface Map<K,V> {
          * @return a comparator that compares {@link Map.Entry} by the key.
          * @since 1.8
          */
+        // 1.8 新特性，没用过，怎么用？？？
         public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(Comparator<? super K> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
@@ -521,6 +530,7 @@ public interface Map<K,V> {
          * @return a comparator that compares {@link Map.Entry} by the value.
          * @since 1.8
          */
+        // 1.8 新特性，没用过，怎么用？？？
         public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(Comparator<? super V> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
